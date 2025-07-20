@@ -1,94 +1,69 @@
-# Obsidian Sample Plugin
+# Obsidian + Vue + Vite Starter Template
 
-This is a sample plugin for Obsidian (https://obsidian.md).
+This is a template for building [Obsidian](https://obsidian.md) plugins using [Vue 3](https://vuejs.org/) and [Vite](https://vitejs.dev/).
 
-This project uses TypeScript to provide type checking and documentation.
-The repo depends on the latest plugin API (obsidian.d.ts) in TypeScript Definition format, which contains TSDoc comments describing what it does.
+It is based on the official [obsidianmd/obsidian-sample-plugin](https://github.com/obsidianmd/obsidian-sample-plugin), but has been refactored to provide a modern, Vue-based development workflow with a more powerful build system.
 
-This sample plugin demonstrates some of the basic functionality the plugin API can do.
-- Adds a ribbon icon, which shows a Notice when clicked.
-- Adds a command "Open Sample Modal" which opens a Modal.
-- Adds a plugin setting tab to the settings page.
-- Registers a global click event and output 'click' to the console.
-- Registers a global interval which logs 'setInterval' to the console.
+## Key Differences from the Official Template
 
-## First time developing plugins?
+This template modernizes the plugin development experience by replacing esbuild with Vite and adding first-class support for Vue.
 
-Quick starting guide for new plugin devs:
+| Feature               | Official Template (**esbuild**)       | This Template (**Vite + Vue**)                                             |
+| --------------------- | ------------------------------------- | -------------------------------------------------------------------------- |
+| **Bundler**           | [esbuild](https://esbuild.github.io/) | [Vite](https://vitejs.dev/) for a richer development experience.           |
+| **UI Framework**      | Plain TypeScript / HTML DOM           | [Vue 3](https://vuejs.org/) with Single File Components (`.vue` files).    |
+| **Project Structure** | Source files in the root directory    | Source code in `src/`, static assets like `manifest.json` in `public/`.    |
+| **Hot Reloading**     | Standard `esbuild --watch`            | Optimized for the Obsidian **Hot-Reload** community plugin out-of-the-box. |
+| **Configuration**     | `esbuild.config.mjs`                  | `vite.config.mts` (a modern, ESM-based config).                            |
 
-- Check if [someone already developed a plugin for what you want](https://obsidian.md/plugins)! There might be an existing plugin similar enough that you can partner up with.
-- Make a copy of this repo as a template with the "Use this template" button (login to GitHub if you don't see it).
-- Clone your repo to a local development folder. For convenience, you can place this folder in your `.obsidian/plugins/your-plugin-name` folder.
-- Install NodeJS, then run `npm i` in the command line under your repo folder.
-- Run `npm run dev` to compile your plugin from `main.ts` to `main.js`.
-- Make changes to `main.ts` (or create new `.ts` files). Those changes should be automatically compiled into `main.js`.
-- Reload Obsidian to load the new version of your plugin.
-- Enable plugin in settings window.
-- For updates to the Obsidian API run `npm update` in the command line under your repo folder.
+## Sample Functionality
 
-## Releasing new releases
+This template demonstrates the minimal setup required to get a Vue component running inside an Obsidian view:
 
-- Update your `manifest.json` with your new version number, such as `1.0.1`, and the minimum Obsidian version required for your latest release.
-- Update your `versions.json` file with `"new-plugin-version": "minimum-obsidian-version"` so older versions of Obsidian can download an older version of your plugin that's compatible.
-- Create new GitHub release using your new version number as the "Tag version". Use the exact version number, don't include a prefix `v`. See here for an example: https://github.com/obsidianmd/obsidian-sample-plugin/releases
-- Upload the files `manifest.json`, `main.js`, `styles.css` as binary attachments. Note: The manifest.json file must be in two places, first the root path of your repository and also in the release.
-- Publish the release.
+-   **Ribbon Icon**: Adds a "dice" icon to the Obsidian ribbon.
+-   **Vue View**: Clicking the ribbon icon opens a custom view in the right-hand sidebar, which renders a sample Vue component with a simple counter.
 
-> You can simplify the version bump process by running `npm version patch`, `npm version minor` or `npm version major` after updating `minAppVersion` manually in `manifest.json`.
-> The command will bump version in `manifest.json` and `package.json`, and add the entry for the new version to `versions.json`
+## How to Use This Template
 
-## Adding your plugin to the community plugin list
+The development workflow is slightly different from the original template to accommodate Vite and enable a better hot-reloading experience.
 
-- Check the [plugin guidelines](https://docs.obsidian.md/Plugins/Releasing/Plugin+guidelines).
-- Publish an initial version.
-- Make sure you have a `README.md` file in the root of your repo.
-- Make a pull request at https://github.com/obsidianmd/obsidian-releases to add your plugin.
+1.  **Clone this repository** to your local machine.
+2.  **Install dependencies**. Make sure you have Node.js v16+ installed.
+    ```bash
+    npm install
+    ```
+3.  **Start the development server in watch mode**. This will create the initial build in a `dist/` folder.
+    ```bash
+    npm run dev
+    ```
+4.  **Link the plugin to your Obsidian vault.**
 
-## How to use
+    You need to create a symbolic link from the dist folder in this repository to your vault's plugins folder. This makes Obsidian aware of your plugin and enables hot reloading.
 
-- Clone this repo.
-- Make sure your NodeJS is at least v16 (`node --version`).
-- `npm i` or `yarn` to install dependencies.
-- `npm run dev` to start compilation in watch mode.
+    Replace `/path/to/your/vault` with the actual path to your Obsidian vault.
 
-## Manually installing the plugin
+    **On macOS / Linux / Git Bash on Windows:**
 
-- Copy over `main.js`, `styles.css`, `manifest.json` to your vault `VaultFolder/.obsidian/plugins/your-plugin-id/`.
+    ```bash
+    ln -s "$(pwd)/dist" "/path/to/your/vault/.obsidian/plugins/obsidian-sample-plugin-vue-vite"
+    ```
 
-## Improve code quality with eslint (optional)
-- [ESLint](https://eslint.org/) is a tool that analyzes your code to quickly find problems. You can run ESLint against your plugin to find common bugs and ways to improve your code. 
-- To use eslint with this project, make sure to install eslint from terminal:
-  - `npm install -g eslint`
-- To use eslint to analyze this project use this command:
-  - `eslint main.ts`
-  - eslint will then create a report with suggestions for code improvement by file and line number.
-- If your source code is in a folder, such as `src`, you can use eslint with this command to analyze all files in that folder:
-  - `eslint .\src\`
+    **On Windows (Command Prompt / PowerShell):**
 
-## Funding URL
+    You must run this command in a shell with Administrator privileges.
 
-You can include funding URLs where people who use your plugin can financially support it.
+    ```bash
+    mklink /D "\path\to\your\vault\.obsidian\plugins\obsidian-sample-plugin-vue-vite" "$(pwd)\dist"
+    ```
 
-The simple way is to set the `fundingUrl` field to your link in your `manifest.json` file:
+5.  **Enable the plugin** in Obsidian's settings.
 
-```json
-{
-    "fundingUrl": "https://buymeacoffee.com"
-}
-```
+Now, any changes you make to the source code will be built automatically, and the "Hot-Reload" plugin (if installed) will refresh your plugin inside Obsidian.
 
-If you have multiple URLs, you can also do:
+## Releasing and Further Information
 
-```json
-{
-    "fundingUrl": {
-        "Buy Me a Coffee": "https://buymeacoffee.com",
-        "GitHub Sponsor": "https://github.com/sponsors",
-        "Patreon": "https://www.patreon.com/"
-    }
-}
-```
+For general guidance on plugin development, such as how to release new versions or submit your plugin to the community store, please consult the official documentation in the [obsidianmd/obsidian-sample-plugin](https://github.com/obsidianmd/obsidian-sample-plugin) README. This template only provides the boilerplate for using Vue and Vite.
 
-## API Documentation
+## Acknowledgements
 
-See https://github.com/obsidianmd/obsidian-api
+This template would not be possible without the solid foundation provided by the official [obsidianmd/obsidian-sample-plugin](https://github.com/obsidianmd/obsidian-sample-plugin) created by the Obsidian team. A big thank you to them for their excellent work in supporting the plugin developer community.
